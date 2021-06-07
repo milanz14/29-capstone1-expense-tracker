@@ -6,4 +6,3 @@
 * Schema Design:
   * There will be 5 models part of the schema - the User model, the Transaction model, the Category mode, the UserCategory model and the UserTransaction model. 
   * These are mainly M2M relationships
-  * 
