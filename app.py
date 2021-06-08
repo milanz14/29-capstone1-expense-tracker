@@ -36,6 +36,7 @@ def user_registration():
             return redirect('/register')
         session['username'] = username
         flash(f'Welcome, {username}!')
+        return redirect('/transactions')
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
@@ -47,11 +48,14 @@ def user_login():
         password = form.username.password
         try:
             user = User.authenticate(username=username, password=password)
-            db.session.add(new_user)
+            db.session.add(user)
             db.session.commit()
         except:
             flash('Something went wrong. Are you registered?')
             return redirect('/login')
+        session['username'] = username
+        flash(f'Welcome back, {username}')
+        return redirect('/transactions')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
