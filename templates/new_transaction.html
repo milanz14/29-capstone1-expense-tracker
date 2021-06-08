@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}New Transaction{% endblock %}
+
+{% block content %}
+    <h3>Add a new Transaction below</h3>
+    <form action="/transactions/new" method="POST">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.widget.input_type != 'hidden' %}
+        <div>
+            {{ field.label }}
+            {{ field(class_="form-control")}}
+
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit">Create new Transaction</button>
+    </form>
+{% endblock %}
