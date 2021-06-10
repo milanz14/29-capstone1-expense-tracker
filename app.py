@@ -26,7 +26,7 @@ def user_registration():
     form = UserForm()
     if form.validate_on_submit():
         username = form.username.data
-        password = form.username.password
+        password = form.password.data
         try:
             new_user = User.register(username=username, password=password)
             db.session.add(new_user)
@@ -36,7 +36,7 @@ def user_registration():
             return redirect('/register')
         session['username'] = username
         flash(f'Welcome, {username}!')
-        return redirect('/transactions')
+        return redirect(f'/users/{new_user.id}')
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
@@ -45,27 +45,30 @@ def user_login():
     form = UserForm()
     if form.validate_on_submit():
         username = form.username.data
-        password = form.username.password
-        try:
-            user = User.authenticate(username=username, password=password)
-            db.session.add(user)
-            db.session.commit()
-        except:
-            flash('Something went wrong. Are you registered?')
-            return redirect('/login')
-        session['username'] = username
-        flash(f'Welcome back, {username}')
-        return redirect('/transactions')
+        password = form.password.data
+        
+        user = User.authenticate(username=username, password=password)
+        if user:
+            session['username'] = username
+            flash(f'Welcome back, {username}')
+            return redirect(f'/users/{user.id}')
+        else:
+            form.username.errors= ['Bad password or Incorrect Username']
     return render_template('login.html', form=form)
 
 @app.route('/logout')
 def logout():
     """ log out a user and redirect to the home page """
+    session.pop('username')
+    flash('Successfully logged out!')
+    return redirect('/')
 
-@app.route('/transactions')
-def show_user_transactions():
-    """ Query the API and show all of a user's transactions """
-    pass
+@app.route('/users/<int:user_id>')
+def show_user_homepage(user_id):
+    """ show user their home page """
+    user = User.query.get_or_404(user_id)
+    return render_template('user_transactions.html', user=user)
+    
 
 @app.route('/transactions/new', methods=['GET','POST'])
 def add_new_transaction():

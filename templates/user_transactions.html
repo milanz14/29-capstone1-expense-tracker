@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}All Transactions Detail{% endblock %}
+
+{% block content %}
+    {% for msg in get_flashed_messages() %}
+        {{ msg }}
+    {% endfor %}
+    <h2>{{ user.username }}, here are your Transactions!</h2>
+    <p>Click on your transactions for additional details.</p>
+    <ul>
+        {% for transaction in user.transactions %}
+        <li>{{ transaction }}</li>
+        {% endfor %}
+    </ul>
+
+    <button >Add Transaction</button>
+{% endblock %}
