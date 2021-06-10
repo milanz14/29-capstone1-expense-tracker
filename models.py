@@ -36,6 +36,12 @@ class User(db.Model):
         else:
             return False
 
+class UserTransaction(db.Model):
+    """ all of a User's transactions """
+    __tablename__ = 'users_transactions'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), primary_key=True)
+
 class Transaction(db.Model):
     """ Transaction model """
     """ One user can have many transactions """
@@ -56,11 +62,7 @@ class Transaction(db.Model):
             'category': self.category
         }
 
-class UserTransaction(db.Model):
-    """ all of a User's transactions """
-    __tablename__ = 'users_transactions'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), primary_key=True)
+
 
 # class UserCategory(db.Model):
 #     """ A specific user's categories """
