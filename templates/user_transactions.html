@@ -8,16 +8,18 @@
     {% endfor %}
     <h2>Here are your most recent transactions, {{ user.username }}!</h2>
     <h4>To view a list of all Transactions, click the 'All Transactions' link in the navigation bar.</h4>
-    <table>
+    <table class="table">
         <thead>
-            <th>Location</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Date</th>
+            <tr>
+                <th scope="col">Location</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Category</th>
+                <th scope="col">Date</th>
+            </tr>
         </thead>
         <tbody>
             {% for transaction in user.transactions %}
-            <tr>
+            <tr scope="row">
                 <td> {{ transaction.location }}</td>
                 <td> {{ transaction.amount }}</td>
                 <td> {{ transaction.category }}</td>
