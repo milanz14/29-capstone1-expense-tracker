@@ -3,8 +3,8 @@
 {% block title %}New Transaction{% endblock %}
 
 {% block content %}
-    <h3>Add a new Transaction below</h3>
-    <form action="/transactions/new" method="POST">
+    <h3>Add a new Transaction for {{ user.username }}</h3>
+    <form action="/users/{{ user.id }}/transactions/new" method="POST">
         {{ form.hidden_tag() }}
         {% for field in form if field.widget.input_type != 'hidden' %}
         <div>
@@ -16,6 +16,6 @@
             {% endfor %}
         </div>
         {% endfor %}
-        <button type="submit">Create new Transaction</button>
+        <button class="btn btn-primary" type="submit">Create new Transaction</button>
     </form>
 {% endblock %}
