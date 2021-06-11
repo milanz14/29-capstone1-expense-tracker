@@ -6,13 +6,26 @@
     {% for msg in get_flashed_messages() %}
         {{ msg }}
     {% endfor %}
-    <h2>{{ user.username }}, here are your Transactions!</h2>
-    <p>Click on your transactions for additional details.</p>
-    <ul>
-        {% for transaction in user.transactions %}
-        <li>{{ transaction }}</li>
-        {% endfor %}
-    </ul>
+    <h2>Here are your most recent transactions, {{ user.username }}!</h2>
+    <h4>To view a list of all Transactions, click the 'All Transactions' link in the navigation bar.</h4>
+    <table>
+        <thead>
+            <th>Location</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+        </thead>
+        <tbody>
+            {% for transaction in user.transactions %}
+            <tr>
+                <td> {{ transaction.location }}</td>
+                <td> {{ transaction.amount }}</td>
+                <td> {{ transaction.category }}</td>
+                <td> {{ transaction.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    <button >Add Transaction</button>
+    <a class="btn btn-primary" href="/users/{{ user.id }}/transactions/new">New Item</a>
 {% endblock %}

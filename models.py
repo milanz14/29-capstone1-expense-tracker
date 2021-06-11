@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -49,7 +49,7 @@ class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     location = db.Column(db.Text, nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.now())
+    date = db.Column(db.DateTime, default=date.today())
     category = db.Column(db.Text, nullable=False)
 
     def serialize(self):

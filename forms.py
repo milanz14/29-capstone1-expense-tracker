@@ -13,3 +13,4 @@ class TransactionForm(FlaskForm):
     location = StringField('Location', validators=[InputRequired()])
     amount = FloatField('Amount', validators=[InputRequired()])
     date = DateField('Date', format="%Y-%m-%d")
+    category = StringField('Category', validators=[InputRequired()])

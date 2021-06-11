@@ -36,7 +36,7 @@ def user_registration():
             return redirect('/register')
         session['username'] = username
         flash(f'Welcome, {username}!')
-        return redirect(f'/users/{new_user.id}')
+        return redirect(f'/users/{new_user.id}/transactions')
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
@@ -51,7 +51,7 @@ def user_login():
         if user:
             session['username'] = username
             flash(f'Welcome back, {username}')
-            return redirect(f'/users/{user.id}')
+            return redirect(f'/users/{user.id}/transactions')
         else:
             form.username.errors= ['Bad password or Incorrect Username']
     return render_template('login.html', form=form)
@@ -63,21 +63,33 @@ def logout():
     flash('Successfully logged out!')
     return redirect('/')
 
-@app.route('/users/<int:user_id>')
+@app.route('/users/<int:user_id>/transactions')
 def show_user_homepage(user_id):
     """ show user their home page """
     user = User.query.get_or_404(user_id)
     return render_template('user_transactions.html', user=user)
     
 
-@app.route('/transactions/new', methods=['GET','POST'])
-def add_new_transaction():
+@app.route('/users/<int:user_id>/transactions/new', methods=['GET','POST'])
+def add_new_transaction_for_user(user_id):
     """ render new transaction form """
     form = TransactionForm()
+    user = User.query.get_or_404(user_id)
     if form.validate_on_submit():
-        pass
+        location = form.location.data
+        amount = form.amount.data
+        date = form.date.data
+        category = form.category.data
+        new_transaction = Transaction(location=location, amount=amount, date=date, category=category)
+        db.session.add(new_transaction)
+        db.session.commit()
+        new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
+        db.session.add(new_user_transaction)
+        db.session.commit()
+        flash('Added!')
+        return redirect(f'/users/{user_id}/transactions')
     else:
-        return render_template('new_transaction.html', form=form)
+        return render_template('new_transaction.html', form=form, user=user)
 
 
 @app.route('/transactions/<int:transaction_id>')
