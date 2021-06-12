@@ -67,6 +67,7 @@ def logout():
 def show_user_homepage(user_id):
     """ show user their home page """
     user = User.query.get_or_404(user_id)
+    # TODO - find the user's transactions and limit the query to 5 most recent
     return render_template('user_transactions.html', user=user)
     
 
@@ -96,5 +97,22 @@ def add_new_transaction_for_user(user_id):
 def show_transaction_detail(transaction_id):
     """ show specifics of a user's transaction """
     pass
+
+@app.route('/api/transactions')
+def show_user_transaction():
+    """ api route to show all user's transsaction """
+    pass
+
+@app.route('/api/transactions/<int:trans_id>')
+def show_specific_transaction(trans_id):
+    """ show the details of a specific transaction """
+    transaction = Transaction.query.get_or_404(trans_id)
+    serialized = transaction.serialize()
+    return jsonify(transaction=serialized)
+
+@app.route('/api/transactions', methods=['POST'])
+def post_transactions():
+    """ add a transaction into the API """
+
 
 

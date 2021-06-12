@@ -22,3 +22,15 @@
   5. `python3 seed.py`
   6. `flask run`
 
+# Technologies Use to build this App:
+  Backend: 
+  - Python 
+  - Flask
+  - SQLAlchemy 
+  - Bcrypt 
+  - WTForms
+  - Postgresql
+
+  Frontend:
+  - 
+

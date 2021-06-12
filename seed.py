@@ -6,7 +6,7 @@ db.drop_all()
 db.create_all()
 
 # User model creates a user
-u1 = User.register(username='test', password='test')
+u1 = User.register(username='test_user', password='test')
 
 db.session.add(u1)
 db.session.commit()
