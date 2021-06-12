@@ -98,8 +98,8 @@ def show_transaction_detail(transaction_id):
     """ show specifics of a user's transaction """
     pass
 
-@app.route('/api/transactions')
-def show_user_transaction():
+@app.route('/api/<int:user_id>/transactions')
+def show_user_transaction(user_id):
     """ api route to show all user's transsaction """
     pass
 
@@ -110,9 +110,10 @@ def show_specific_transaction(trans_id):
     serialized = transaction.serialize()
     return jsonify(transaction=serialized)
 
-@app.route('/api/transactions', methods=['POST'])
+@app.route('/api/<int:user_id>/transactions/new', methods=['POST'])
 def post_transactions():
-    """ add a transaction into the API """
+    """ add a new transaction for a specific user """
+    
 
 
 

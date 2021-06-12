@@ -13,8 +13,8 @@
 * You can run the app via the link below
   * `coming soon`
 
-* You can also run this on your machine by typing the following into your terminal
-* Please ensure that you have POSTGRES installed 
+* You can also run this on your machine by cloning the repository and typing the following into your terminal
+  * (Please ensure that you have POSTGRES installed)
   1. `python3 -m venv venv`
   2. `source venv/bin/activate`
   3. `pip install -r requirements.txt`
@@ -22,8 +22,8 @@
   5. `python3 seed.py`
   6. `flask run`
 
-# Technologies Use to build this App:
-  Backend: 
+# Technologies Used to build this App:
+  ### Backend: 
   - Python 
   - Flask
   - SQLAlchemy 
@@ -31,6 +31,8 @@
   - WTForms
   - Postgresql
 
-  Frontend:
-  - 
+  ### Frontend:
+  - JavaScript
+  - Bootstrap
+  
 
