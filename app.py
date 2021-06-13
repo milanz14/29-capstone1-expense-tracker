@@ -74,7 +74,7 @@ def show_user_homepage(user_id):
     user = User.query.get_or_404(user_id)
     # TODO - find the user's transactions and limit the query to 5 most recent
     return render_template('user_transactions.html', user=user)
-    
+
 
 @app.route('/users/<int:user_id>/transactions/new', methods=['GET','POST'])
 def add_new_transaction_for_user(user_id):
@@ -86,7 +86,8 @@ def add_new_transaction_for_user(user_id):
         amount = form.amount.data
         date = form.date.data
         category = form.category.data
-        new_transaction = Transaction(location=location, amount=amount, date=date, category=category)
+        details = form.details.data
+        new_transaction = Transaction(location=location, amount=amount, date=date, category=category, details=details)
         db.session.add(new_transaction)
         db.session.commit()
         new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
@@ -101,7 +102,8 @@ def add_new_transaction_for_user(user_id):
 @app.route('/transactions/<int:transaction_id>')
 def show_transaction_detail(transaction_id):
     """ show specifics of a user's transaction """
-    pass
+    transaction = Transaction.query.get_or_404(transaction_id)
+    return render_template('transaction_detail.html', transaction=transaction)
 
 @app.route('/api/<int:user_id>/transactions')
 def show_user_transaction(user_id):
@@ -127,13 +129,15 @@ def post_transactions(user_id):
     amount = form.amount.data
     date = form.date.data
     category = form.category.data
-    new_transaction = Transaction(location=location, amount=amount, date=date, category=category)
+    details = form.details.data
+    new_transaction = Transaction(location=location, amount=amount, date=date, category=category, details=details)
     db.session.add(new_transaction)
     db.session.commit()
     new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
     db.session.add(new_user_transaction)
     db.session.commit()
-    return (jsonify(transaction=new_transaction.serialize()), 201)
+    # return (jsonify(transaction=new_transaction.serialize()), 201)
+    return redirect(f'/users/{user_id}/transactions')
 
 @app.route('/api/transactions/<int:transaction_id>', methods=['PATCH'])
 def update_transaction(transaction_id):
