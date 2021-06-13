@@ -22,7 +22,7 @@
                 {% endfor %}
                 <button class="btn btn-primary my-3" type="submit">Create new Transaction</button>
             </form>
-            <a class="btn btn-warning my-1" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
+            <a id="return-trans" class="btn btn-warning my-1" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
         </div>
     </div>
 {% endblock %}
