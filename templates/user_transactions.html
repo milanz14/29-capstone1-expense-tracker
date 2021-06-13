@@ -24,6 +24,7 @@
                         <th scope="col">Amount</th>
                         <th scope="col">Category</th>
                         <th scope="col">Date</th>
+                        <th scope="col">Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,7 @@
                         <td> {{ transaction.amount }}</td>
                         <td> {{ transaction.category }}</td>
                         <td> {{ transaction.date }}</td>
+                        <td> {{ transaction.details }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

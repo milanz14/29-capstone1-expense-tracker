@@ -1,7 +1,8 @@
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Transaction, UserTransaction
 from forms import UserForm, TransactionForm
+import flask_sqlalchemy
 import os
 
 app = Flask(__name__)
@@ -66,6 +67,10 @@ def logout():
 @app.route('/users/<int:user_id>/transactions')
 def show_user_homepage(user_id):
     """ show user their home page """
+    if 'username' not in session:
+        flash('You must be logged in to view this')
+        return redirect('/login')
+    
     user = User.query.get_or_404(user_id)
     # TODO - find the user's transactions and limit the query to 5 most recent
     return render_template('user_transactions.html', user=user)
@@ -101,7 +106,11 @@ def show_transaction_detail(transaction_id):
 @app.route('/api/<int:user_id>/transactions')
 def show_user_transaction(user_id):
     """ api route to show all user's transsaction """
-    pass
+    user = User.query.get(user_id)
+    user_transactions = user.transactions
+    user_trans_serialized = [transaction.serialize() for transaction in user_transactions]
+    # transactions_limit = user_trans_serialized.order_by(desc('transactions.date')).limit(5)
+    return jsonify(transactions=user_trans_serialized)
 
 @app.route('/api/transactions/<int:trans_id>')
 def show_specific_transaction(trans_id):
@@ -110,10 +119,41 @@ def show_specific_transaction(trans_id):
     serialized = transaction.serialize()
     return jsonify(transaction=serialized)
 
-@app.route('/api/<int:user_id>/transactions/new', methods=['POST'])
-def post_transactions():
+@app.route('/api/<int:user_id>/transactions', methods=['POST'])
+def post_transactions(user_id):
     """ add a new transaction for a specific user """
-    
+    form = TransactionForm()
+    location = form.location.data
+    amount = form.amount.data
+    date = form.date.data
+    category = form.category.data
+    new_transaction = Transaction(location=location, amount=amount, date=date, category=category)
+    db.session.add(new_transaction)
+    db.session.commit()
+    new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
+    db.session.add(new_user_transaction)
+    db.session.commit()
+    return (jsonify(transaction=new_transaction.serialize()), 201)
+
+@app.route('/api/transactions/<int:transaction_id>', methods=['PATCH'])
+def update_transaction(transaction_id):
+    """ update a specific transaction """
+    form = TransactionForm()
+    transaction = Transaction.query.get_or_404(transaction_id)
+    transaction.location = form.location.data
+    transaction.amount = form.amount.data
+    transaction.date = form.date.data
+    transaction.category = form.category.data
+    db.session.commit()
+    return jsonify(transaction=transaction.serialize()) 
+
+@app.route('/api/transactions/<int:transaction_id>', methods=['DELETE'])
+def delete_transaction(transaction_id):
+    """ Delete a transaction by id number """
+    deleted = Transaction.query.get_or_404(transaction_id)
+    db.session.delete(deleted)
+    db.session.commit()
+    return jsonify(message='Removed')
 
 
 

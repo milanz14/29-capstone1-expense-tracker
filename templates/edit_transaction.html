@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Transaction{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center my-3">
+        <h3>Add a new Transaction for {{ user.username }}</h3>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <form action="/users/{{ user.id }}/transactions/new" method="POST">
+                
+                <button class="btn btn-primary my-3" type="submit">Save Edit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
