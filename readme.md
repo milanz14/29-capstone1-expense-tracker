@@ -33,6 +33,10 @@
 
   ### Frontend:
   - JavaScript
+  - Axios
   - Bootstrap
+
+  ## Testing:
+  - Python Unittest
   
 

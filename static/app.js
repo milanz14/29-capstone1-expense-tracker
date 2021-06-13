@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newTR = document.createElement('tr')
 
                 newTR.innerHTML = `
-                    <td><a href="${URL}/transactions/${transactionID}"</a>${transactionID}</td>
+                    <td><a href="${URL}/users/${userID}/transactions/${transactionID}"</a>${transactionID}</td>
                     <td>${location}</td>
                     <td>${amount}</td>
                     <td>${category}</td>
@@ -34,5 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     getButton.addEventListener('click', fetchData);
 });
 
-//TODO - add API call based on fetch Data button so that all of the data loads
+
+//TODO - add FILTER to be able to FILTER by category
+
   
