@@ -9,17 +9,24 @@
         {% endfor %}
     </div>
     <div class="d-flex justify-content-center my-3">
-        <h2 class="my-3">Here are your most recent transactions, {{ user.username }}!</h2>
+        <h2 class="my-3">Hello, {{ user.username }}</h2>
+        <h3 id="user" hidden>{{ user.id }}</h3>
     </div>
     <div class="d-flex justify-content-center my-3">
-        <h4 class="my-3">To view a list of all Transactions, click the 'All Transactions' link in the navigation bar.</h4>
+        <h4 class="my-3">To see your transsactions, click the button below to update.. </h4>
     </div>
-    
+    <div class="d-flex justify-content-center my-3">
+        <a class="btn btn-warning" href="/users/{{ user.id }}/transactions/new">New Transaction</a>
+    </div>
+    <div class="d-flex justify-content-center my-2">
+        <button id="get-btn" class="btn btn-primary">Get Latest Data</button>
+    </div>
     <div class="row justify-content-center">
         <div class="col-8">
             <table class="table table-striped table-hover">
-                <thead>
+                <thead >
                     <tr>
+                        <th scope="col">ID</th>
                         <th scope="col">Location</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Category</th>
@@ -27,21 +34,9 @@
                         <th scope="col">Details</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for transaction in user.transactions %}
-                    <tr scope="row">
-                        <td> {{ transaction.location }}</td>
-                        <td> {{ transaction.amount }}</td>
-                        <td> {{ transaction.category }}</td>
-                        <td> {{ transaction.date }}</td>
-                        <td> {{ transaction.details }}</td>
-                    </tr>
-                    {% endfor %}
+                <tbody id="table-container">
                 </tbody>
-            </table>
+            </table> 
         </div>
-    </div>
-    <div class="d-flex justify-content-center my-3">
-        <a class="btn btn-warning" href="/users/{{ user.id }}/transactions/new">New Item</a>
     </div>
 {% endblock %}

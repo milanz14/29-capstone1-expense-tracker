@@ -8,7 +8,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-10">
-            <form action="/users/{{ user.id }}/transactions/new" method="POST">
+            <form action="/api/{{ user.id }}/transactions" method="POST">
                 {{ form.hidden_tag() }}
                 {% for field in form if field.widget.input_type != 'hidden' %}
                 <div>
@@ -22,6 +22,7 @@
                 {% endfor %}
                 <button class="btn btn-primary my-3" type="submit">Create new Transaction</button>
             </form>
+            <a class="btn btn-warning my-1" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
         </div>
     </div>
 {% endblock %}
