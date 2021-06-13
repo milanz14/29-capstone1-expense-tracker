@@ -99,15 +99,25 @@ def add_new_transaction_for_user(user_id):
         return render_template('new_transaction.html', form=form, user=user)
 
 
-@app.route('/transactions/<int:transaction_id>')
-def show_transaction_detail(transaction_id):
+@app.route('/users/<int:user_id>/transactions/<int:transaction_id>')
+def show_transaction_detail(user_id, transaction_id):
     """ show specifics of a user's transaction """
     transaction = Transaction.query.get_or_404(transaction_id)
-    return render_template('transaction_detail.html', transaction=transaction)
+    user = User.query.get_or_404(user_id)
+    form = TransactionForm()
+    if form.validate_on_submit():
+        transaction = Transaction.query.get_or_404(transaction_id)
+        transaction.location = form.location.data
+        transaction.amount = form.amount.data
+        transaction.date = form.date.data
+        transaction.category = form.category.data
+        db.session.commit()
+        return redirect(f'/users/{user_id}/transactions')
+    return render_template('edit_transaction.html', user=user,transaction=transaction, form=form)
 
 @app.route('/api/<int:user_id>/transactions')
 def show_user_transaction(user_id):
-    """ api route to show all user's transsaction """
+    """ api route to show all user's transaction """
     user = User.query.get(user_id)
     user_transactions = user.transactions
     user_trans_serialized = [transaction.serialize() for transaction in user_transactions]
@@ -139,25 +149,32 @@ def post_transactions(user_id):
     # return (jsonify(transaction=new_transaction.serialize()), 201)
     return redirect(f'/users/{user_id}/transactions')
 
-@app.route('/api/transactions/<int:transaction_id>', methods=['PATCH'])
-def update_transaction(transaction_id):
+@app.route('/api/<int:user_id>/transactions/<int:transaction_id>', methods=['PATCH','POST'])
+def update_transaction(user_id, transaction_id):
     """ update a specific transaction """
-    form = TransactionForm()
+    form = TransactionForm(form)
     transaction = Transaction.query.get_or_404(transaction_id)
     transaction.location = form.location.data
     transaction.amount = form.amount.data
     transaction.date = form.date.data
     transaction.category = form.category.data
+    transaction.details = form.details.data
     db.session.commit()
-    return jsonify(transaction=transaction.serialize()) 
+    # return jsonify(transaction=transaction.serialize())
+    return redirect(f'/users/{user_id}/transactions') 
 
-@app.route('/api/transactions/<int:transaction_id>', methods=['DELETE'])
-def delete_transaction(transaction_id):
+@app.route('/api/<int:user_id>/transactions/<int:transaction_id>/delete', methods=['POST','DELETE'])
+def delete_transaction(user_id, transaction_id):
     """ Delete a transaction by id number """
     deleted = Transaction.query.get_or_404(transaction_id)
-    db.session.delete(deleted)
-    db.session.commit()
-    return jsonify(message='Removed')
+    try:
+        db.session.delete(deleted)
+        db.session.commit()
+        return redirect(f'/users/{user_id}/transactions')
+    except:
+        return "There was a problem"
+    # return jsonify(message='Removed')
+    
 
 
 
