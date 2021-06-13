@@ -51,6 +51,7 @@ class Transaction(db.Model):
     amount = db.Column(db.Float(precision=2), nullable=False)
     date = db.Column(db.DateTime, default=date.today())
     category = db.Column(db.Text, nullable=False)
+    details = db.Column(db.Text)
 
     def serialize(self):
         """ serialize the transaction """
@@ -59,7 +60,8 @@ class Transaction(db.Model):
             'location': self.location,
             'amount': self.amount,
             'date': self.date,
-            'category': self.category
+            'category': self.category,
+            'details': self.details,
         }
 
 
