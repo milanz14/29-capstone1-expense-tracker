@@ -32,12 +32,12 @@ def user_registration():
             new_user = User.register(username=username, password=password)
             db.session.add(new_user)
             db.session.commit()
+            session['username'] = username
+            flash(f'Welcome, {username}!')
+            return redirect(f'/users/{new_user.id}/transactions')
         except:
             flash('Username already exists!')
-            return redirect('/register')
-        session['username'] = username
-        flash(f'Welcome, {username}!')
-        return redirect(f'/users/{new_user.id}/transactions')
+            return redirect('/register') 
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
