@@ -66,11 +66,4 @@ class Transaction(db.Model):
 
 
 
-# class UserCategory(db.Model):
-#     """ A specific user's categories """
-#     __tablename__ = 'users_categories'
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-#     category = db.Column(db.Integer, db.ForeignKey('transactions.category'), primary_key=True)
-
-
 
