@@ -1,7 +1,7 @@
 const getButton = document.getElementById('get-btn')
 const bodyContainer = document.getElementById('table-container')
 const userID = document.getElementById('user').innerHTML
-const URL = 'http://localhost:5000'
+const URL = 'https://budgee-app.herokuapp.com/'
 
 document.addEventListener('DOMContentLoaded', () => {
     const fetchData = async (e) => {
