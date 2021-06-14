@@ -11,7 +11,7 @@
 # Run this App
 
 * You can run the app via the link below
-  * `coming soon`
+  * `https://budgee-app.herokuapp.com/`
 
 * You can also run this on your machine by cloning the repository and typing the following into your terminal
   * (Please ensure that you have POSTGRES installed)
