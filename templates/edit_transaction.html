@@ -21,6 +21,9 @@
     <form action="/api/{{ user.id }}/transactions/{{ transaction.id}}/delete" method="POST">
         <button type="submit" class="btn btn-danger">Delete this Transaction</button>
     </form>
+    <form action="/users/{{ user.id }}/transactions">
+        <button type="submit" class="btn btn-secondary mx-3">Back</button>
+    </form>
     </div>
     <div class="row justify-content-center">
         <div class="col-10">
