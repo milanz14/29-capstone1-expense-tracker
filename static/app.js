@@ -1,7 +1,8 @@
 const getButton = document.getElementById('get-btn')
 const bodyContainer = document.getElementById('table-container')
 const userID = document.getElementById('user').innerHTML
-const URL = 'https://budgee-app.herokuapp.com/'
+// const URL = 'https://budgee-app.herokuapp.com/'
+const URL = 'http://localhost:5000'
 
 document.addEventListener('DOMContentLoaded', () => {
     const fetchData = async (e) => {
@@ -17,16 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const details = transaction.details;
                 const transactionID = transaction.id;
                 const newTR = document.createElement('tr')
-
+                
                 newTR.innerHTML = `
-                    <td><a href="${URL}/users/${userID}/transactions/${transactionID}"</a>${transactionID}</td>
-                    <td>${location}</td>
+                    <td><a href="${URL}/users/${userID}/transactions/${transactionID}"</a>${location}</td>
                     <td>${amount}</td>
                     <td>${category}</td>
                     <td>${date}</td>
                     <td>${details}</td>`
-
+                
                 bodyContainer.append(newTR);
+                
             }
         });
     };
