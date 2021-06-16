@@ -1,14 +1,25 @@
-const getButton = document.getElementById('get-btn')
-const bodyContainer = document.getElementById('table-container')
-const userID = document.getElementById('user').innerHTML
-const URL = 'https://budgee-app.herokuapp.com'
-// const URL = 'http://localhost:5000'
+let ctx = document.getElementById('myChart').getContext('2d')
+let container = document.getElementById('myChart')
+let loader = document.querySelector('.loader');
+const bodyContainer = document.getElementById('table-container');
+const userID = document.getElementById('user').innerHTML;
+const URL = 'https://budgee-app.herokuapp.com';
+// const URL = 'http://localhost:5000';
+
+const showLoadingView = () => {
+    loader.innerHTML = '<p>LOADING... </p>'
+};
+
+const stopLoadingView = () => {
+    loader.innerHTML = ' ';
+}
 
 const fetchData = async (e) => {
     e.preventDefault();
     
     await axios.get(`${URL}/api/${userID}/transactions`).then(response => {
         console.log(response.data.transactions)
+        stopLoadingView();
         for (let transaction of response.data.transactions) {
             const location = transaction.location;
             const amount = transaction.amount;
@@ -29,4 +40,5 @@ const fetchData = async (e) => {
     });
 };
 
+showLoadingView();
 document.addEventListener('DOMContentLoaded', fetchData);

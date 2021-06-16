@@ -12,6 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 connect_db(app)
 toolbar = DebugToolbarExtension(app)
@@ -19,6 +20,10 @@ toolbar = DebugToolbarExtension(app)
 @app.route('/')
 def show_homepage():
     """ display main landing page """
+    if 'user_id' in session:
+        userid = session.get('user_id')
+        user = User.query.get_or_404(userid)
+        return render_template('profile.html', user=user)
     return render_template('homepage.html')
 
 # Register, login and logout routes are to be implemented after
@@ -70,7 +75,7 @@ def logout():
 def show_user_homepage(user_id):
     """ show user their home page """
     if session.get('user_id') != user_id:
-        flash('You do not have permission to view this.')
+        flash("Hey you! Hands off! That's not yours! Here's your profile instead.")
         return redirect('/')
     
     user = User.query.get_or_404(user_id)
@@ -82,15 +87,16 @@ def add_new_transaction_for_user(user_id):
     """ render new transaction form """
     
     if session.get('user_id') != user_id:
-        flash('You do not have permission to view this.')
-    else:
-        form = TransactionForm()
-        user = User.query.get_or_404(user_id)
-        if form.validate_on_submit():
-            location = form.location.data
-            amount = form.amount.data
-            category = form.category.data
-            details = form.details.data
+        flash("Hey you! Hands off! That's not yours! Here's your profile instead.")
+        return redirect('/')
+    form = TransactionForm()
+    user = User.query.get_or_404(user_id)
+    if form.validate_on_submit():
+        location = form.location.data
+        amount = form.amount.data
+        category = form.category.data
+        details = form.details.data
+        try:
             new_transaction = Transaction(location=location, amount=amount, category=category, details=details)
             db.session.add(new_transaction)
             db.session.commit()
@@ -99,17 +105,24 @@ def add_new_transaction_for_user(user_id):
             db.session.commit()
             flash('Added!')
             return redirect(f'/users/{user_id}/transactions')
-        else:
-            return render_template('new_transaction.html', form=form, user=user)
+        except IntegrityError:
+            db.session.rollback()
+            amount.errors.append('Amount must be a number')
+            return redirect(f'/users/{user_id}/transactions/new')
+    else:
+        return render_template('new_transaction.html', form=form, user=user)
     return render_template('homepage.html')
 
 @app.route('/users/<int:user_id>/transactions/<int:transaction_id>')
 def show_transaction_detail(user_id, transaction_id):
     """ show specifics of a user's transaction """
     if session.get('user_id') != user_id:
-        flash('You do not have permission to access this.')
+        flash('You do not have permission to view this. Here is your profile instead.')
         return redirect('/')
-    transaction = Transaction.query.get_or_404(transaction_id)
+    transaction = Transaction.query.get(transaction_id)
+    if not transaction:
+        flash('Transaction does not exist')
+        return redirect('/')
     user = User.query.get_or_404(user_id)
     form = TransactionForm(obj=transaction)
     if form.validate_on_submit():
