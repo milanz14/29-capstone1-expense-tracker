@@ -48,8 +48,7 @@ class Transaction(db.Model):
     __tablename__ = 'transactions'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     location = db.Column(db.Text, nullable=False)
-    amount = db.Column(db.Float(precision=2), nullable=False)
-    date = db.Column(db.DateTime, default=date.today())
+    amount = db.Column(db.Integer, nullable=False)
     category = db.Column(db.Text, nullable=False)
     details = db.Column(db.Text)
 
@@ -59,7 +58,6 @@ class Transaction(db.Model):
             'id': self.id,
             'location': self.location,
             'amount': self.amount,
-            'date': self.date,
             'category': self.category,
             'details': self.details,
         }

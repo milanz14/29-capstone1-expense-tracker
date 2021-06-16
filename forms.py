@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FloatField, SelectField
+from wtforms import StringField, PasswordField, DecimalField, SelectField
 from wtforms.validators import InputRequired
 from wtforms.fields.html5 import DateField
 
@@ -13,7 +13,6 @@ class UserForm(FlaskForm):
 class TransactionForm(FlaskForm):
     """ simple form to allow the creating of a new budget transaction """
     location = StringField('Location', validators=[InputRequired()])
-    amount = FloatField('Amount', validators=[InputRequired()])
-    date = DateField('Date', format="%Y-%m-%d")
+    amount = DecimalField('Amount', places=2, validators=[InputRequired()])
     category = SelectField('Category', choices=[(cat,cat) for cat in category_options], validators=[InputRequired()])
     details = StringField('Expense Details')

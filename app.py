@@ -3,11 +3,12 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Transaction, UserTransaction
 from forms import UserForm, TransactionForm
 import flask_sqlalchemy
+from sqlalchemy.exc import IntegrityError
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
@@ -33,7 +34,7 @@ def user_registration():
             new_user = User.register(username=username, password=password)
             db.session.add(new_user)
             db.session.commit()
-            session['username'] = username
+            session['user_id'] = new_user.id
             flash(f'Welcome, {username}!')
             return redirect(f'/users/{new_user.id}/transactions')
         except:
@@ -51,8 +52,8 @@ def user_login():
         
         user = User.authenticate(username=username, password=password)
         if user:
-            session['username'] = username
-            flash(f'Welcome back, {username}')
+            session['user_id'] = user.id
+            flash(f'Welcome Back, {username}!')
             return redirect(f'/users/{user.id}/transactions')
         else:
             form.username.errors= ['Bad password or Incorrect Username']
@@ -61,57 +62,62 @@ def user_login():
 @app.route('/logout')
 def logout():
     """ log out a user and redirect to the home page """
-    session.pop('username')
+    session.pop('user_id')
     flash('Successfully logged out!')
     return redirect('/')
 
 @app.route('/users/<int:user_id>/transactions')
 def show_user_homepage(user_id):
     """ show user their home page """
-    if 'username' not in session:
-        flash('You must be logged in to view this')
-        return redirect('/login')
+    if session.get('user_id') != user_id:
+        flash('You do not have permission to view this.')
+        return redirect('/')
     
     user = User.query.get_or_404(user_id)
     # TODO - find the user's transactions and limit the query to 5 most recent
     return render_template('user_transactions.html', user=user)
 
-
 @app.route('/users/<int:user_id>/transactions/new', methods=['GET','POST'])
 def add_new_transaction_for_user(user_id):
     """ render new transaction form """
-    form = TransactionForm()
-    user = User.query.get_or_404(user_id)
-    if form.validate_on_submit():
-        location = form.location.data
-        amount = form.amount.data
-        date = form.date.data
-        category = form.category.data
-        details = form.details.data
-        new_transaction = Transaction(location=location, amount=amount, date=date, category=category, details=details)
-        db.session.add(new_transaction)
-        db.session.commit()
-        new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
-        db.session.add(new_user_transaction)
-        db.session.commit()
-        flash('Added!')
-        return redirect(f'/users/{user_id}/transactions')
+    
+    if session.get('user_id') != user_id:
+        flash('You do not have permission to view this.')
     else:
-        return render_template('new_transaction.html', form=form, user=user)
-
+        form = TransactionForm()
+        user = User.query.get_or_404(user_id)
+        if form.validate_on_submit():
+            location = form.location.data
+            amount = form.amount.data
+            category = form.category.data
+            details = form.details.data
+            new_transaction = Transaction(location=location, amount=amount, category=category, details=details)
+            db.session.add(new_transaction)
+            db.session.commit()
+            new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
+            db.session.add(new_user_transaction)
+            db.session.commit()
+            flash('Added!')
+            return redirect(f'/users/{user_id}/transactions')
+        else:
+            return render_template('new_transaction.html', form=form, user=user)
+    return render_template('homepage.html')
 
 @app.route('/users/<int:user_id>/transactions/<int:transaction_id>')
 def show_transaction_detail(user_id, transaction_id):
     """ show specifics of a user's transaction """
+    if session.get('user_id') != user_id:
+        flash('You do not have permission to access this.')
+        return redirect('/')
     transaction = Transaction.query.get_or_404(transaction_id)
     user = User.query.get_or_404(user_id)
-    form = TransactionForm()
+    form = TransactionForm(obj=transaction)
     if form.validate_on_submit():
-        transaction = Transaction.query.get_or_404(transaction_id)
+        # transaction = Transaction.query.get_or_404(transaction_id)
         transaction.location = form.location.data
         transaction.amount = form.amount.data
-        transaction.date = form.date.data
         transaction.category = form.category.data
+        transaction.details = form.details.data
         db.session.commit()
         return redirect(f'/users/{user_id}/transactions')
     return render_template('edit_transaction.html', user=user,transaction=transaction, form=form)
@@ -138,10 +144,9 @@ def post_transactions(user_id):
     form = TransactionForm()
     location = form.location.data
     amount = form.amount.data
-    date = form.date.data
     category = form.category.data
     details = form.details.data
-    new_transaction = Transaction(location=location, amount=amount, date=date, category=category, details=details)
+    new_transaction = Transaction(location=location, amount=amount, category=category, details=details)
     db.session.add(new_transaction)
     db.session.commit()
     new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
@@ -153,11 +158,10 @@ def post_transactions(user_id):
 @app.route('/api/<int:user_id>/transactions/<int:transaction_id>', methods=['PATCH','POST'])
 def update_transaction(user_id, transaction_id):
     """ update a specific transaction """
-    form = TransactionForm(form)
+    form = TransactionForm()
     transaction = Transaction.query.get_or_404(transaction_id)
     transaction.location = form.location.data
     transaction.amount = form.amount.data
-    transaction.date = form.date.data
     transaction.category = form.category.data
     transaction.details = form.details.data
     db.session.commit()

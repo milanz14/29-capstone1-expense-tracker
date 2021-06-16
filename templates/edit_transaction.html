@@ -11,7 +11,6 @@
             <div>
                 <h6>Location: {{ transaction.location }}</h6>
                 <h6>Amount: {{ transaction.amount }}</h6>
-                <h6>Date: {{ transaction.date }}</h6>
                 <h6>Category: {{ transaction.category }}</h6>
                 <h6>Details: {{ transaction.details }}</h6>
             </div>
@@ -25,6 +24,9 @@
         <button type="submit" class="btn btn-secondary mx-3">Back</button>
     </form>
     </div>
+    <div>
+        <h3 class="d-flex justify-content-center my-5">Edit Transaction Details (you can update via the form below)</h3>
+    </div>
     <div class="row justify-content-center">
         <div class="col-10">
             <form action="/api/{{ user.id }}/transactions/{{ transaction.id }}" method="POST">
@@ -32,14 +34,14 @@
                 {% for field in form if field.widget.input_type != 'hidden' %}
                 <div>
                     {{ field.label }}
-                    {{ field(class_="form-control")}}
+                    {{ field(class_="form-control") }}
 
                     {% for error in field.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
                 {% endfor %}
-                <button class="btn btn-warning my-3" type="submit">Edit</button>
+                <button class="btn btn-warning my-3" type="submit">Update</button>
             </form>
         </div>
     </div>
