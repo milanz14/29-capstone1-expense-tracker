@@ -6,9 +6,9 @@
     <div class="d-flex justify-content-center my-3">
         <h3>Add a new Transaction for {{ user.username }}</h3>
     </div>
-    <div class="row justify-content-center">
+    <div class="container-fluid row justify-content-center">
         <div class="col-10">
-            <form action="/api/{{ user.id }}/transactions" method="POST">
+            <form action="/api/{{ user.id }}/transactions" method="POST" class="shadow p-3 mb-5 bg-body rounded">
                 {{ form.hidden_tag() }}
                 {% for field in form if field.widget.input_type != 'hidden' %}
                 <div>
@@ -20,9 +20,9 @@
                     {% endfor %}
                 </div>
                 {% endfor %}
-                <button class="btn btn-primary my-3" type="submit">Create new Transaction</button>
+                <button class="btn btn-primary my-3" type="submit">Add new Transaction</button>
             </form>
-            <a id="return-trans" class="btn btn-warning my-1" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
+            <a id="return-trans" class="btn btn-warning my-1 shadow bg-body rounded" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
         </div>
     </div>
 {% endblock %}
