@@ -12,7 +12,6 @@ const fetchData = async (e) => {
         for (let transaction of response.data.transactions) {
             const location = transaction.location;
             const amount = transaction.amount;
-            const date = transaction.date;
             const category = transaction.category;
             const details = transaction.details;
             const transactionID = transaction.id;
@@ -22,7 +21,6 @@ const fetchData = async (e) => {
                 <td><a href="${URL}/users/${userID}/transactions/${transactionID}"</a>${location}</td>
                 <td>${amount}</td>
                 <td>${category}</td>
-                <td>${date}</td>
                 <td>${details}</td>`
             
             bodyContainer.append(newTR);
