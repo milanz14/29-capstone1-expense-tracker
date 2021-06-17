@@ -7,8 +7,8 @@ from sqlalchemy.exc import IntegrityError
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
@@ -85,7 +85,6 @@ def show_user_homepage(user_id):
 @app.route('/users/<int:user_id>/transactions/new', methods=['GET','POST'])
 def add_new_transaction_for_user(user_id):
     """ render new transaction form """
-    
     if session.get('user_id') != user_id:
         flash("Hey you! Hands off! That's not yours! Here's your profile instead.")
         return redirect('/')
@@ -109,9 +108,7 @@ def add_new_transaction_for_user(user_id):
             db.session.rollback()
             amount.errors.append('Amount must be a number')
             return redirect(f'/users/{user_id}/transactions/new')
-    else:
-        return render_template('new_transaction.html', form=form, user=user)
-    return render_template('homepage.html')
+    return render_template('new_transaction.html', form=form, user=user)
 
 @app.route('/users/<int:user_id>/transactions/<int:transaction_id>')
 def show_transaction_detail(user_id, transaction_id):
@@ -159,12 +156,17 @@ def post_transactions(user_id):
     amount = form.amount.data
     category = form.category.data
     details = form.details.data
-    new_transaction = Transaction(location=location, amount=amount, category=category, details=details)
-    db.session.add(new_transaction)
-    db.session.commit()
-    new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
-    db.session.add(new_user_transaction)
-    db.session.commit()
+    try:
+        new_transaction = Transaction(location=location, amount=amount, category=category, details=details)
+        db.session.add(new_transaction)
+        db.session.commit()
+        new_user_transaction = UserTransaction(user_id=user_id, transaction_id=new_transaction.id)
+        db.session.add(new_user_transaction)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash('Amount must be a number')
+        return redirect(f'/users/{user_id}/transactions/new')
     # return (jsonify(transaction=new_transaction.serialize()), 201)
     return redirect(f'/users/{user_id}/transactions')
 

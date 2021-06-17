@@ -48,7 +48,7 @@ class Transaction(db.Model):
     __tablename__ = 'transactions'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     location = db.Column(db.Text, nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Integer, db.CheckConstraint('amount>0'), nullable=False)
     category = db.Column(db.Text, nullable=False)
     details = db.Column(db.Text)
 

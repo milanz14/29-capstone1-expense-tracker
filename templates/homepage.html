@@ -8,17 +8,19 @@
       background-image: url('https://images.unsplash.com/photo-1459257831348-f0cdd359235f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1500&q=80');
       background-repeat: no-repeat;
       background-attachment: fixed;
-      background-position: center;
+      /* background-position: center; */
     }
   </style>
-<div class="jumbotron shadow p-3 mb-5 bg-body rounded">
-    <h1 class="display-4">Welcome.</h1>
-    <p class="lead">Welcome to Budgee, the simple personal budget tracker.</p>
-    <hr class="my-4">
+  <div class="container my-5">
+    <div class="jumbotron shadow p-3 mb-5 bg-body rounded">
+      <h1 class="display-4">Welcome.</h1>
+      <p class="lead">Welcome to Budgee, the simple personal budget tracker.</p>
+      <hr class="my-4">
         <p>To start, please create an account.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" href="/register" role="button">Register</a>
-    </p>
+        <p class="lead">
+        <a class="btn btn-primary btn-lg" href="/register" role="button">Register</a>
+        </p>
+    </div>
   </div>
     <div class="d-flex justify-content-center my-3">
         {% for msg in get_flashed_messages() %}
