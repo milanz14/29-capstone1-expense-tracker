@@ -11,6 +11,11 @@
       /* background-position: center; */
     }
   </style>
+  <div class="d-flex justify-content-center my-3">
+    {% for msg in get_flashed_messages() %}
+        {{ msg }}
+    {% endfor %}
+</div>
   <div class="container my-5">
     <div class="jumbotron shadow p-3 mb-5 bg-body rounded">
       <h1 class="display-4">Welcome.</h1>
@@ -22,9 +27,5 @@
         </p>
     </div>
   </div>
-    <div class="d-flex justify-content-center my-3">
-        {% for msg in get_flashed_messages() %}
-            {{ msg }}
-        {% endfor %}
-    </div>
+    
 {% endblock %}
