@@ -3,8 +3,8 @@ let container = document.getElementById('myChart')
 let loader = document.querySelector('.loader');
 const bodyContainer = document.getElementById('table-container');
 const userID = document.getElementById('user').innerHTML;
-// const URL = 'https://budgee-app.herokuapp.com';
-const URL = 'http://localhost:5000';
+const URL = 'https://budgee-app.herokuapp.com';
+// const URL = 'http://localhost:5000';
 
 const showLoadingView = () => {
     loader.innerHTML = '<p>LOADING... </p>'
