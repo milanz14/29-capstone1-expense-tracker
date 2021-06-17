@@ -179,7 +179,12 @@ def update_transaction(user_id, transaction_id):
     transaction.amount = form.amount.data
     transaction.category = form.category.data
     transaction.details = form.details.data
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash('Amount must be a number')
+        return redirect(f'/users/{user_id}/transactions/{transaction_id}')
     # return jsonify(transaction=transaction.serialize())
     return redirect(f'/users/{user_id}/transactions') 
 
