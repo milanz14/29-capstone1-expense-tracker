@@ -19,6 +19,14 @@ const stopLoadingView = () => {
 }
 showLoadingView();
 
+const randomColors = () => {
+    let r = Math.floor(Math.random() * 255) + 1;
+    let g = Math.floor(Math.random() * 255) + 1;
+    let b = Math.floor(Math.random() * 255) + 1;
+    color = `rgb(${r}, ${g}, ${b})`
+    return color;
+};
+
 const fetchData = async (e) => {
     e.preventDefault();
     
@@ -30,6 +38,7 @@ const fetchData = async (e) => {
             labels.push(location)
             const amount = transaction.amount;
             amounts.push(amount)
+            backgroundColors.push(randomColors());
             const category = transaction.category;
             const details = transaction.details;
             const transactionID = transaction.id;
@@ -51,22 +60,7 @@ const data = {
     labels: labels,
     datasets: [{
         label: 'Your Spending',
-        backgroundColor: [
-            'rgb(132,99,25)',
-            'rgb(255,255,0)',
-            'rgb(255,0,255)',
-            'rgb(0,255,255)',
-            'rgb(0,0,255)',
-            'rgb(255,0,0)',
-            'rgb(0,255,0)',
-            'rgb(50,50,50)',
-            'rgb(255,255,0)',
-            'rgb(255,0,255)',
-            'rgb(0,255,255)',
-            'rgb(0,0,255)',
-            'rgb(255,0,0)',
-            'rgb(0,255,0)',
-        ],
+        backgroundColor: backgroundColors,
         data: amounts,
         hoverOffset: 4
     }],
