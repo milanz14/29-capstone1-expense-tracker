@@ -56,33 +56,36 @@ const fetchData = async (e) => {
     });
 };
 
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'Your Spending',
-        backgroundColor: backgroundColors,
-        data: amounts,
-        hoverOffset: 4
-    }],
-};
+const generateChart = () => {
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Your Spending',
+            backgroundColor: backgroundColors,
+            data: amounts,
+            hoverOffset: 4
+        }],
+    };
 
-const config = {
-    type: 'doughnut',
-    data: data,
-    options: {
-        legend: {
-            display: true,
-            position: 'bottom',
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            legend: {
+                display: true,
+                position: 'bottom',
+            },
         },
-    },
-};
+    };
 
-let myChart = new Chart(
-    ctx,
-    config
-);
+    let myChart = new Chart(
+        ctx,
+        config
+    );
 
-myChart.canvas.parentNode.style.height = '550px';
-myChart.canvas.parentNode.style.width = '550px';
+    myChart.canvas.parentNode.style.height = '550px';
+    myChart.canvas.parentNode.style.width = '550px';
+}
 
 document.addEventListener('DOMContentLoaded', fetchData);
+document.addEventListener('DOMContentLoaded', generateChart);
