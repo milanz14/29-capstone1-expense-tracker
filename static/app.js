@@ -63,19 +63,13 @@ const generateChart = () => {
             label: 'Your Spending',
             backgroundColor: backgroundColors,
             data: amounts,
-            hoverOffset: 4
+            hoverOffset: 2
         }],
     };
 
     const config = {
         type: 'doughnut',
         data: data,
-        options: {
-            legend: {
-                display: true,
-                position: 'bottom',
-            },
-        },
     };
 
     let myChart = new Chart(
