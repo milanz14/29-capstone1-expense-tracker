@@ -110,11 +110,11 @@ def add_new_transaction_for_user(user_id):
             return redirect(f'/users/{user_id}/transactions/new')
     return render_template('new_transaction.html', form=form, user=user)
 
-@app.route('/users/<int:user_id>/transactions/<int:transaction_id>')
+@app.route('/users/<int:user_id>/transactions/<transaction_id>')
 def show_transaction_detail(user_id, transaction_id):
     """ show specifics of a user's transaction """
     if session.get('user_id') != user_id:
-        flash('You do not have permission to view this. Here is your profile instead.')
+        flash("Hey you! Hands off! That's not yours! Here's your profile instead.")
         return redirect('/')
     transaction = Transaction.query.get(transaction_id)
     if not transaction:
@@ -141,7 +141,7 @@ def show_user_transaction(user_id):
     # transactions_limit = user_trans_serialized.order_by(desc('transactions.date')).limit(5)
     return jsonify(transactions=user_trans_serialized)
 
-@app.route('/api/transactions/<int:trans_id>')
+@app.route('/api/transactions/<trans_id>')
 def show_specific_transaction(trans_id):
     """ show the details of a specific transaction """
     transaction = Transaction.query.get_or_404(trans_id)
@@ -170,7 +170,7 @@ def post_transactions(user_id):
     # return (jsonify(transaction=new_transaction.serialize()), 201)
     return redirect(f'/users/{user_id}/transactions')
 
-@app.route('/api/<int:user_id>/transactions/<int:transaction_id>', methods=['PATCH','POST'])
+@app.route('/api/<int:user_id>/transactions/<transaction_id>', methods=['PATCH','POST'])
 def update_transaction(user_id, transaction_id):
     """ update a specific transaction """
     form = TransactionForm()
@@ -188,7 +188,7 @@ def update_transaction(user_id, transaction_id):
     # return jsonify(transaction=transaction.serialize())
     return redirect(f'/users/{user_id}/transactions') 
 
-@app.route('/api/<int:user_id>/transactions/<int:transaction_id>/delete', methods=['POST','DELETE'])
+@app.route('/api/<int:user_id>/transactions/<transaction_id>/delete', methods=['POST','DELETE'])
 def delete_transaction(user_id, transaction_id):
     """ Delete a transaction by id number """
     deleted = Transaction.query.get_or_404(transaction_id)
