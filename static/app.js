@@ -1,4 +1,4 @@
-let ctx = document.getElementById('myChart')
+let ctx = document.getElementById('myChart').getContext('2d')
 let container = document.getElementById('myChart')
 let loader = document.querySelector('.loader');
 const bodyContainer = document.getElementById('table-container');
