@@ -116,9 +116,10 @@ def show_transaction_detail(user_id, transaction_id):
     if session.get('user_id') != user_id:
         flash("Hey you! Hands off! That's not yours! Here's your profile instead.")
         return redirect('/')
-    transaction = Transaction.query.get(transaction_id)
-    if not transaction:
-        flash('Transaction does not exist')
+    try:
+        transaction = Transaction.query.filter_by(id=transaction_id).first()
+    except:
+        flash('Uh oh! That transaction does not exist. Are you trying to spoof a transaction?')
         return redirect('/')
     user = User.query.get_or_404(user_id)
     form = TransactionForm(obj=transaction)
