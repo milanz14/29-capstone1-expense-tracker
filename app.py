@@ -7,8 +7,8 @@ from sqlalchemy.exc import IntegrityError
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///budgetapp').replace("://", "ql://", 1)
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
@@ -79,7 +79,6 @@ def show_user_homepage(user_id):
         return redirect('/')
     
     user = User.query.get_or_404(user_id)
-    # TODO - find the user's transactions and limit the query to 5 most recent
     return render_template('user_transactions.html', user=user)
 
 @app.route('/users/<int:user_id>/transactions/new', methods=['GET','POST'])
