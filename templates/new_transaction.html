@@ -11,23 +11,25 @@
     <div class="d-flex justify-content-center my-3">
         <h3>Add a new Transaction for {{ user.username }}</h3>
     </div>
-    <div class="container-fluid row justify-content-center">
-        <div class="col-10">
-            <form action="/api/{{ user.id }}/transactions" method="POST" class="shadow p-3 mb-5 bg-body rounded">
-                {{ form.hidden_tag() }}
-                {% for field in form if field.widget.input_type != 'hidden' %}
-                <div>
-                    {{ field.label }}
-                    {{ field(class_="form-control")}}
+    <div class="container">
+        <div class="container-fluid row justify-content-center">
+            <div class="col-8">
+                <form action="/api/{{ user.id }}/transactions" method="POST" class="shadow p-3 mb-5 bg-body rounded">
+                    {{ form.hidden_tag() }}
+                    {% for field in form if field.widget.input_type != 'hidden' %}
+                    <div>
+                        {{ field.label }}
+                        {{ field(class_="form-control")}}
 
-                    {% for error in field.errors %}
-                        <p>{{ error }}</p>
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endfor %}
-                </div>
-                {% endfor %}
-                <button class="btn btn-primary my-3" type="submit">Add new Transaction</button>
-            </form>
-            <a id="return-trans" class="btn btn-warning my-1 shadow bg-body rounded" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
+                    <button class="btn btn-primary my-3" type="submit">Add new Transaction</button>
+                </form>
+                <a id="return-trans" class="btn btn-warning my-1 shadow bg-body rounded" href="/users/{{ user.id }}/transactions">Back to My Transactions</a>
+            </div>
         </div>
     </div>
 {% endblock %}

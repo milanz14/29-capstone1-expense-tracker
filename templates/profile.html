@@ -12,18 +12,20 @@
     <h2 class="my-3">{{ user.username }}'s profile details</h2>
     <h3 id="user" hidden>{{ user.id }}</h3>
     </div>
-    <div class="d-flex justify-content-center my-3">
-        <div class="card" style="width: 25rem;">
-            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1500&q=80" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{ user.username }}</h5>
-                <p class="card-text"><p>You currently have {{ user.transactions | length }} saved transactions </p>
-                {% if user.transactions %}
-                <p>...Add some more!</p>
-                {% else %}
-                <p>...Go Add some!</p>
-                {% endif %}</p>
-                <a class="btn btn-primary" href="/users/{{ user.id }}/transactions">{{ user.username }}'s Transactions</a href="/users/{{ user.id }}/transactions">
+    <div class="container">
+        <div class="d-flex justify-content-center my-3">
+            <div class="card" style="width: 25rem;">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1500&q=80" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.username }}</h5>
+                    <p class="card-text"><p>You currently have {{ user.transactions | length }} saved transactions </p>
+                    {% if user.transactions %}
+                    <p>...Add some more!</p>
+                    {% else %}
+                    <p>...Go Add some!</p>
+                    {% endif %}</p>
+                    <a class="btn btn-primary" href="/users/{{ user.id }}/transactions">{{ user.username }}'s Transactions</a href="/users/{{ user.id }}/transactions">
+                </div>
             </div>
         </div>
     </div>

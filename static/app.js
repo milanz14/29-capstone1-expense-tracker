@@ -54,6 +54,8 @@ const fetchData = async (e) => {
             
         }
     });
+
+    generateChart();
 };
 
 const generateChart = () => {
@@ -82,4 +84,3 @@ const generateChart = () => {
 }
 
 document.addEventListener('DOMContentLoaded', fetchData);
-document.addEventListener('DOMContentLoaded', generateChart);
