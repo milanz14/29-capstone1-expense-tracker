@@ -3,6 +3,7 @@
 # Run this App
 * You can run the app via the link below
   * `https://budgee-app.herokuapp.com/`
+  * ### AS OF 27-NOV, this project is offline due to Heroku changes. 
 
 * You can also run this on your machine by cloning the repository and typing the following into your terminal to play around in sandbox mode.
   * (Please ensure that you have POSTGRES installed)
